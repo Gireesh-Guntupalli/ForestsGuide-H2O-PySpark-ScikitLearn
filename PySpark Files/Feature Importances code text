@@ -1,0 +1,22 @@
+from pyspark.ml.feature import StringIndexer, VectorAssembler, VectorSlicer
+from pyspark.ml import Pipeline
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
+
+
+
+pipe = Pipeline(stages = [model])
+mod = pipe.fit(trainingData)
+trainingData2 =  mod.transform(trainingData)
+print(f"Feature importnces: {mod.stages[-1].featureImportances}")
+def ExtractFeatureImp(featureImp, dataset, featuresCol):
+    list_extract = []
+     for i in dataset.schema[featuresCol].metadata["ml_attr"]["attrs"]:
+          list_extract = list_extract + dataset.schema[featuresCol].metadata["ml_attr"]["attrs"][i]
+     varlist = pd.DataFrame(list_extract)
+     varlist['score'] = varlist['idx'].apply(lambda x: featureImp[x])
+     return (varlist.sort_values('score', ascending=False))
+ExtractFeatureImp(mod.stages[-1].featureImportances, trainingData2, 'Independent_features').to_csv("FeatureImportancesFold10SkLearnUni.csv")
+print(ExtractFeatureImp(mod.stages[-1].featureImportances, trainingData2, 'Independent_features'))
+  #Refered from https://www.timlrx.com/blog/feature-selection-using-feature-importance-score-creating-a-pyspark-estimator

@@ -1,0 +1,3 @@
+# varimp = model.varimp(use_pandas=True)
+# varimp.to_csv("FeatureImportancesFold10SkLearnUni.csv")
+# print(varimp)

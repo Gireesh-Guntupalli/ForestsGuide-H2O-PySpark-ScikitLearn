@@ -1,0 +1,4 @@
+ importances = model.feature_importances_
+ df_fimp = pd.DataFrame({"Features": x_names, 'Feat.Importances': importances})
+ print(df_fimp.sort_values(by="Feat.Importances", ascending=False))
+ df_fimp.to_csv("FeatureImportancesFold10SkLearnUni.csv")
